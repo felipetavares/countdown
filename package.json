@@ -1,0 +1,23 @@
+{
+  "name": "countdown",
+  "main": "./lib/countdown",
+  "version": "0.1.0",
+  "description": "Ludum Dare Countdown, before, during and after",
+  "activationCommands": {
+    "atom-workspace": "countdown:toggle"
+  },
+  "repository": "https://github.com/atom/countdown",
+  "license": "MIT",
+  "engines": {
+    "atom": ">=0.174.0 <2.0.0"
+  },
+  "dependencies": {
+  },
+  "consumedServices": {
+   "status-bar": {
+     "versions": {
+       "^1.0.0": "consumeStatusBar"
+     }
+   }
+ }
+}
