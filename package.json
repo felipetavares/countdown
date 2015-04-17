@@ -6,7 +6,7 @@
   "activationCommands": {
     "atom-workspace": "countdown:toggle"
   },
-  "repository": "https://github.com/atom/countdown",
+  "repository": "https://github.com/felipetavares/countdown",
   "license": "MIT",
   "engines": {
     "atom": ">=0.174.0 <2.0.0"
