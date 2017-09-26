@@ -2,10 +2,11 @@
 
 module.exports = Countdown =
   countdown: null
+  msg: 'FIN!'
   time: null
   subscriptions: null
-  ldstart: new Date("Apr 17 2015 18:00:00 PDT")
-  ldend: new Date ("Apr 19 2015 18:00:00 PDT")
+  ldstart: null
+  ldend: null
   event: null
   bar: null
   display: false
@@ -19,20 +20,19 @@ module.exports = Countdown =
     @subscriptions.add atom.commands.add 'atom-workspace', 'countdown:toggle': => @toggle()
 
   consumeStatusBar: (statusBar) ->
-    image = document.createElement "img"
-    image.src = "atom://countdown/styles/ld.png"
-    image.width = 16
-    image.style.marginRight = "4px"
+    Countdown.msg     = 'start'
+    Countdown.ldstart = new Date()
+    Countdown.ldend   = new Date()
+    Countdown.ldend.setHours( Countdown.ldend.getHours() + 1)
 
     @event = document.createElement "span"
-    @event.textContent = "LD#32"
+    @event.textContent = ""
 
     @time = document.createElement "span"
     @time.textContent = ""
     @time.style.marginRight = "4px"
 
     @countdown = document.createElement "span"
-    @countdown.appendChild image
     @countdown.appendChild @time
     @countdown.appendChild @event
 
@@ -62,44 +62,32 @@ module.exports = Countdown =
         @consumeStatusBar(@statusBar)
 
   redraw: ->
-    missing = Countdown.ldstart.getTime()-new Date().getTime()
 
-    if missing < 0
-      missing = Countdown.ldend.getTime()-new Date().getTime()
+    missing = Countdown.ldend.getTime() - new Date().getTime()
 
-      if missing < 0 and missing > -3600000
-        missing = missing+3600000
+    signe   =  ""
+    signe   =  "-" if missing < 0
 
-        milis = missing%1000
-        missing = Math.floor(missing/1000)
+    missing = Math.abs missing;
 
-        secs = missing%60
-        missing = Math.floor(missing/60)
-
-        mins = missing%60
-        missing = Math.floor(missing/60)
-
-        Countdown.time.textContent = "SUBMIT! " + mins + ":" + secs
-
-        return
-      else
-        if missing < 0
-          Countdown.time.textContent = "FIN!"
-          return
-
-    milis = missing%1000
+    milis   = missing%1000
     missing = Math.floor(missing/1000)
 
-    secs = missing%60
+    secs    = missing%60
     missing = Math.floor(missing/60)
 
-    mins = missing%60
+    mins    = missing%60
     missing = Math.floor(missing/60)
-
-    hours = missing%24
 
     missing = Math.floor(missing/24)
 
-    days = missing
+    if mins < 10
+      mins = '0'+mins
 
-    Countdown.time.textContent = days + "d " + hours + ":" + mins + ":" + secs
+    if secs < 10
+      secs = '0'+secs
+
+    if mins < 10 || signe == '-'
+      Countdown.time.style.color =  "red"
+
+    Countdown.time.textContent =  "[ " + signe + " "+ mins + ":" + secs + " ]"
